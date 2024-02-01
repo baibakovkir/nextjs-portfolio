@@ -22,6 +22,7 @@ export default async function ProjectsPage() {
 
   const featured = allProjects.find((project) => project.slug === "diploma")!;
   const sorted = allProjects
+    .filter((p) => p.slug !== "diploma")
     .filter((p) => p.published)
     .sort(
       (a, b) =>
