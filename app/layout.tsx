@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     siteName: "kiryxa09.com",
     images: [
       {
-        url: "https://kiryxahttps://github.com/kiryxa09/images/blob/main/%D1%80%D0%B5%D0%B7%D1%8E%D0%BC%D0%B5.png09.com/og.png",
+        url: "https://github.com/kiryxa09/images/blob/main/%D1%80%D0%B5%D0%B7%D1%8E%D0%BC%D0%B5.png09.com/og.png",
         width: 1920,
         height: 1080,
       },

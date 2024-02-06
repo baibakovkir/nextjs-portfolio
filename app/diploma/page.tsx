@@ -1,6 +1,4 @@
 import React from 'react';
-// import dynamic from 'next/dynamic';
-// const LeafletMap = dynamic(() => import('../components/leaflet'), { ssr: false });
 import Map from '../components/Map';
 import { Navigation } from "../components/nav";
 

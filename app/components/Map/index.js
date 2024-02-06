@@ -1,6 +1,7 @@
+'use client';
 import dynamic from "next/dynamic"
 
-const Map = dynamic(() => import('./index.js'), {
+const Map = dynamic(() => import('./map'), {
   ssr: false
 })
 
