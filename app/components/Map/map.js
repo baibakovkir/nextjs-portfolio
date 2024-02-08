@@ -5,6 +5,7 @@ import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility
 import styles from './Map.module.css';
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import meteostations from '../../../constants/meteo_stations.js'
 
 const points = [
   { name: "Дом", coordinates: [55.864852, 38.192146], link: 'dom' },
@@ -29,6 +30,13 @@ const Map = () => {
 
   const customIcon = new L.Icon({
     iconUrl: "https://www.svgrepo.com/show/225946/fields-farm.svg",
+    iconSize: [30, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+  });
+
+  const meteostationIcon = new L.Icon({
+    iconUrl: "https://www.svgrepo.com/show/256392/thermometer-temperature.svg",
     iconSize: [30, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
@@ -66,6 +74,18 @@ const Map = () => {
           </Link>
           </Popup>
         </Marker>
+        ))}
+        {meteostations.map((point, index) => (
+          point.lat && (<Marker key={index} position={[point.lat, parseFloat(point.lon)]} draggable={false} icon={meteostationIcon}>
+          <Popup>
+          <Link href={{
+            pathname: '/diploma/point',
+            query: point.link,
+          }}>
+            {point.name}
+          </Link>
+          </Popup>
+        </Marker>)
         ))}
       </MapContainer>
     </div>
