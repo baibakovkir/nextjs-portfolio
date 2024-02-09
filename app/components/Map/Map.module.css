@@ -1,39 +1,8 @@
 .map {
-  width: 50vw;
-  height: 50vh;
-}
-.mapContainer {
-  display: flex;
-}
-
-/* Select container */
-.selectContainer {
-  margin-right: 20px;
-}
-
-/* Select styles */
-.selectContainer select {
-  padding: 8px;
-  font-size: 16px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  background-color: #fff;
-  color: #333;
-  cursor: pointer;
-}
-
-@media (max-width: 768px) {
-  .map {
-    width: 80vw;
-    height: 50vh;
-  }
-
-  .mapContainer {
-    flex-direction: column;
-  }
-
-  .selectContainer {
-    margin-right: 0;
-    margin-bottom: 10px;
-  }
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
 }
