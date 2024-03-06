@@ -1,5 +1,5 @@
 'use client';
-import { MapContainer, TileLayer, Marker, Popup, ZoomControl } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import styles from './Map.module.css';
@@ -11,7 +11,8 @@ import { Icon } from "leaflet";
 
 
 const Map = () => {
-  const [selectedPoint, setSelectedPoint] = useState(gsus[0]); // Set the default selected point
+  const gsuInitial = gsus.find((gsu) => gsu.Id === 151);
+  const [selectedPoint, setSelectedPoint] = useState(gsuInitial); // Set the default selected point
 
   const handlePointChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedPointName = event.target.value;
@@ -42,7 +43,7 @@ const Map = () => {
   
   return (
     <div className={styles.mapContainer}>
-    <select style={{ top: '100px' }} className="absolute top-100-px right-5 z-20 appearance-none bg-white border border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:border-blue-500" value={selectedPoint.Name!} onChange={handlePointChange}>
+    <select style={{ top: '100px' }} className="absolute top-100-px right-5 z-20 appearance-none bg-white border border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:border-blue-500" value={selectedPoint!.Name!} onChange={handlePointChange}>
       {gsus.map((point, index) => (
         <option key={index} value={point.Name!}>
           {point.Name}
@@ -50,9 +51,9 @@ const Map = () => {
       ))}
     </select>
       <MapContainer
-        key={selectedPoint.Name}
+        key={selectedPoint!.Name}
         className={styles.map}
-        center={[selectedPoint.X!, selectedPoint.Y!]} // Center the map on the selectedPoint.coordinates}
+        center={[selectedPoint!.X!, selectedPoint!.Y!]} // Center the map on the selectedPoint.coordinates}
         zoom={12}
         scrollWheelZoom={true}
         zoomControl={false}
@@ -86,7 +87,6 @@ const Map = () => {
           </Popup>
         </Marker>)
         ))}
-        <ZoomControl position="bottomleft" />
       </MapContainer>
     </div>
   );

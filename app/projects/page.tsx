@@ -89,7 +89,7 @@ export default async function ProjectsPage() {
         <div className="grid grid-cols-1 gap-4 mx-auto lg:mx-0 md:grid-cols-3">
           <div className="grid grid-cols-1 gap-4">
             {sorted
-              .filter((_, i) => i % 3 === 0)
+              .filter((_, i) => i === 0)
               .map((project) => (
                 <Card key={project.slug}>
                   <Article project={project} views={views[project.slug] ?? 0} />
@@ -98,7 +98,16 @@ export default async function ProjectsPage() {
           </div>
           <div className="grid grid-cols-1 gap-4">
             {sorted
-              .filter((_, i) => i % 3 === 1)
+              .filter((_, i) => i % 2 !== 0)
+              .map((project) => (
+                <Card key={project.slug}>
+                  <Article project={project} views={views[project.slug] ?? 0} />
+                </Card>
+              ))}
+          </div>
+          <div className="grid grid-cols-1 gap-4">
+            {sorted
+              .filter((_, i) => i % 2 === 0 && i !== 0)
               .map((project) => (
                 <Card key={project.slug}>
                   <Article project={project} views={views[project.slug] ?? 0} />
