@@ -43,7 +43,7 @@ const LineChart: React.FC<LineChartProps> = ({ chartData }) => {
 
   return (
     <div className="chart-container">
-      <div className="border border-gray-400 p-4">
+      <div className="border border-gray-400 p-4 h-96">
         <canvas id="lineChart"></canvas>
       </div>
     </div>

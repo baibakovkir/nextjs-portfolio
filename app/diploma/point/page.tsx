@@ -81,8 +81,7 @@ const PointPage: React.FC = () => {
   useEffect(() => {
     let lat = selectedMeteo!.lat!.replace(',', '.')!;
     let lon = selectedMeteo!.lon!.replace(',', '.')!;
-    const API_key = "1b55acadcf8ef2f3ea4f6f89a6d08a90";
-    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_key}`)
+    fetch(`https://api.ambeedata.com/latest/by-lat-lng?lat=${lat}&lng=${lon}`)
     .then(response => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -91,12 +90,30 @@ const PointPage: React.FC = () => {
     })
     .then(data => {
       console.log(data);
-      setMeteodata(data);
     })
     .catch(error => {
       console.error('There has been a problem with the fetch operation:', error);
     });
   },[selectedMeteo])
+
+  // useEffect(() => {
+  //   let lat = selectedMeteo!.lat!.replace(',', '.')!;
+  //   let lon = selectedMeteo!.lon!.replace(',', '.')!;
+  //   const API_key = "1b55acadcf8ef2f3ea4f6f89a6d08a90";
+  //   fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_key}`)
+  //   .then(response => {
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! status: ${response.status}`);
+  //     }
+  //     return response.json();
+  //   })
+  //   .then(data => {
+  //     setMeteodata(data);
+  //   })
+  //   .catch(error => {
+  //     console.error('There has been a problem with the fetch operation:', error);
+  //   });
+  // },[selectedMeteo])
   
   const degrees = meteodata.wind.deg;
   let direction = '';
@@ -119,9 +136,9 @@ const PointPage: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center w-screen min-h-screen justify-center mx-auto overflow-hidden bg-gradient-to-tl from-zinc-500 via-zinc-600/20 to-black">
+    <div className="flex flex-col items-center w-screen min-h-screen justify-center mx-auto overflow-hidden bg-gradient-to-tl from-zinc-500 via-zinc-600/20 to-black pb-48">
       <Navigation />
-      <div className='h-10'></div>
+      <div className='h-24'></div>
       <h1 className='mt-4 color-text z-50 font-display text-3xl sm:text-5xl md:text-7xl bg-clip-text text-center text-white'>{selectedGsu?.Name} ГСУ</h1>
       <div className='h-3'></div>
       <div>
@@ -139,7 +156,7 @@ const PointPage: React.FC = () => {
               <article className="relative w-full h-full p-4 md:p-8">
                 <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Координаты</h2>
                 <p className="md:mt-4 md:text-xl leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300 text-xs">
-                  Latitude: {selectedGsu?.X} <p></p>Longitude: {selectedGsu?.Y}
+                  Latitude: {selectedGsu?.X} Longitude: {selectedGsu?.Y}
                 </p>
               </article>
             </Card>
@@ -147,7 +164,7 @@ const PointPage: React.FC = () => {
               <article className="relative w-full h-full p-4 md:p-8">
                 <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Филиал:</h2>
                 <p className="md:mt-4 md:text-xl leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300 text-xs">
-                  {selectedGsu?.Filial} <p></p>
+                  {selectedGsu?.Filial}
                   Id метеостанции: {selectedGsu?.wmo_id}
                 </p>
               </article>
@@ -172,12 +189,12 @@ const PointPage: React.FC = () => {
               <article className="relative w-full h-full p-4 md:p-8">
                 <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Ветер</h2>
                 <p className="md:mt-4 md:text-xl leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300 text-xs">
-                  Направление: {direction} <p></p>Скорость: {meteodata.wind.speed}м/с
+                  Направление: {direction} Скорость: {meteodata.wind.speed}м/с
                 </p>
               </article>
             </Card>
         </div>
-        <div className='m-auto w-10/12 mx-auto'>
+        <div className='m-auto w-10/12 mx-auto h-96'>
           <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display m-auto">
             Прогноз белка и фактический белок</h2>
              { <LineChart chartData={proteinData}  /> }   

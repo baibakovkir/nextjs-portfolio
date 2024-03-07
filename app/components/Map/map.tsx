@@ -61,6 +61,9 @@ const Map = () => {
         <TileLayer
           url='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
         />
+        <TileLayer
+          url='https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png'
+        />
         {gsus.sort((a, b) => a.Name.localeCompare(b.Name)).map((point, index) => (
           <Marker key={index} position={[point.X!, point.Y!]} draggable={false} icon={customIcon}>
             <Popup>
