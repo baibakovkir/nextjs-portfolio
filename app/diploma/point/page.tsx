@@ -9,10 +9,9 @@ import LineChart from "../../components/Charts/LineChart";
 
 const PointPage: React.FC = () => {
   const searchParams = useSearchParams()
- 
   const gsuId = searchParams?.get('id')
- 
   const selectedGsu = gsus.find((gsu) => gsu.Id === parseInt(gsuId!))
+  const OpenWeatherApiKey = process.env.OPENWEATHER_API_KEY;
 
   const selectedMeteo = meteostations.find((meteostation) => meteostation.wmo_id === selectedGsu!.wmo_id)
   const proteinData = {
@@ -96,24 +95,25 @@ const PointPage: React.FC = () => {
     });
   },[selectedMeteo])
 
-  // useEffect(() => {
-  //   let lat = selectedMeteo!.lat!.replace(',', '.')!;
-  //   let lon = selectedMeteo!.lon!.replace(',', '.')!;
-  //   const API_key = "1b55acadcf8ef2f3ea4f6f89a6d08a90";
-  //   fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_key}`)
-  //   .then(response => {
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! status: ${response.status}`);
-  //     }
-  //     return response.json();
-  //   })
-  //   .then(data => {
-  //     setMeteodata(data);
-  //   })
-  //   .catch(error => {
-  //     console.error('There has been a problem with the fetch operation:', error);
-  //   });
-  // },[selectedMeteo])
+  useEffect(() => {
+    let lat = selectedMeteo!.lat!.replace(',', '.')!;
+    let lon = selectedMeteo!.lon!.replace(',', '.')!;
+    const API_key = "1b55acadcf8ef2f3ea4f6f89a6d08a90";
+    console.log(OpenWeatherApiKey);
+    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_key}`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      setMeteodata(data);
+    })
+    .catch(error => {
+      console.error('There has been a problem with the fetch operation:', error);
+    });
+  },[selectedMeteo])
   
   const degrees = meteodata.wind.deg;
   let direction = '';
@@ -156,7 +156,7 @@ const PointPage: React.FC = () => {
               <article className="relative w-full h-full p-4 md:p-8">
                 <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Координаты</h2>
                 <p className="md:mt-4 md:text-xl leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300 text-xs">
-                  Latitude: {selectedGsu?.X} Longitude: {selectedGsu?.Y}
+                  Latitude: {selectedGsu?.X}; Longitude: {selectedGsu?.Y}
                 </p>
               </article>
             </Card>
@@ -165,7 +165,6 @@ const PointPage: React.FC = () => {
                 <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Филиал:</h2>
                 <p className="md:mt-4 md:text-xl leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300 text-xs">
                   {selectedGsu?.Filial}
-                  Id метеостанции: {selectedGsu?.wmo_id}
                 </p>
               </article>
             </Card>
@@ -189,7 +188,7 @@ const PointPage: React.FC = () => {
               <article className="relative w-full h-full p-4 md:p-8">
                 <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Ветер</h2>
                 <p className="md:mt-4 md:text-xl leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300 text-xs">
-                  Направление: {direction} Скорость: {meteodata.wind.speed}м/с
+                  Направление: {direction}; Скорость: {meteodata.wind.speed}м/с
                 </p>
               </article>
             </Card>
