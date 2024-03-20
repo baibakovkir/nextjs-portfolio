@@ -196,7 +196,7 @@ const PointPage: React.FC = () => {
         <div className='m-auto w-10/12 mx-auto h-96'>
           <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display m-auto">
             Прогноз белка и фактический белок</h2>
-             { <LineChart chartData={proteinData}  /> }   
+             { <LineChart chartData={proteinData} id='protein' /> }   
         </div>
         </div>
       </div>
