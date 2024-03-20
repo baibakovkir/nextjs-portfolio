@@ -2,8 +2,8 @@
 
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import R from '@/constants/R_wmoID.js';
-import T from '@/constants/T_wmoId.js';
+import R from '../../../constants/R_wmoID.js';
+import T from '../../../constants/T_wmoId.js';
 import LineChart from "../../components/Charts/LineChart";
 import { Navigation } from "../../components/nav";
 
