@@ -2,53 +2,96 @@
 
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import R from '../../../constants/R_wmoID.js';
-import T from '../../../constants/T_wmoId.js';
 import LineChart from "../../components/Charts/LineChart";
 import { Navigation } from "../../components/nav";
+import keys from '../../../keys.js'
 
-const findClosestStationId = (wmoId: any, tempData: any) => {
-  const closestStationIds: any = [];
-  let closestStationId: any = null;
-  let minDistance = Infinity;
+// const findClosestStationId = (wmoId: any, tempData: any) => {
+//   const closestStationIds: any = [];
+//   let closestStationId: any = null;
+//   let minDistance = Infinity;
 
-  tempData.forEach((tempEntry: any) => {
-    const distance = Math.abs(wmoId - tempEntry.station_id);
+//   tempData.forEach((tempEntry: any) => {
+//     const distance = Math.abs(wmoId - tempEntry.station_id);
 
-    if (distance < minDistance) {
-      minDistance = distance;
-      closestStationId = tempEntry.station_id;
-    }
-  });
+//     if (distance < minDistance) {
+//       minDistance = distance;
+//       closestStationId = tempEntry.station_id;
+//     }
+//   });
 
-  const tempData_filtered = tempData.filter((tempEntry: any) => tempEntry.station_id === closestStationId);
-  tempData_filtered.forEach((tempEntry: any) => {
-    closestStationIds.push(tempEntry);
-  });
+//   const tempData_filtered = tempData.filter((tempEntry: any) => tempEntry.station_id === closestStationId);
+//   tempData_filtered.forEach((tempEntry: any) => {
+//     closestStationIds.push(tempEntry);
+//   });
 
-  return closestStationIds;
-};
+//   return closestStationIds;
+// };
 
 const MeteostationPage: React.FC = () => {
   const searchParams = useSearchParams();
   const wmoId = searchParams?.get('id');
   const name  = searchParams?.get('name');
-  const [R_station, setR] = useState([]);
-  const [T_station, setT] = useState([]);
+  const [R_station, setR_station] = useState([]);
+  const [T_station, setT_station] = useState([]);
   const [R_years, setR_years] = useState<any>([]);
   const [T_years, setT_years] = useState<any>([]);
   const [T_jan, setT_jan] = useState<any>([]);
   const [T_jul, setT_jul] = useState<any>([]);
   const [T_vegetation, setT_vegetation] = useState<any>([]);
   const [R_vegetation, setR_vegetation] = useState<any>([]);
+  const [T, setT] = useState<any>(null);
+  const [R, setR] = useState<any>(null);
 
 
   useEffect(() => {
-    if (wmoId) {
-      setR(findClosestStationId(wmoId, R));
-      setT(findClosestStationId(wmoId, T));
-    }  
-  }, [wmoId]);
+    const fetchR = async () => {
+      const response = await fetch(`https://api.github.com/repos/kiryxa09/jsons/contents/R_by_wmo_id/${wmoId}/entries.json`, {
+        headers: {
+          Authorization: `Bearer ${keys.GITHUB_API_TOKEN}`,
+        },
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        // Data field contains the base64 encoded content of the file
+        const rawData = atob(data.content);
+        const parsedData = JSON.parse(rawData);
+        setR(parsedData);
+      } else {
+        console.error('Failed to fetch JSON data');
+      }
+    };
+
+    const fetchT = async () => {
+      const response = await fetch(`https://api.github.com/repos/kiryxa09/jsons/contents/T_by_wmo_id/${wmoId}/entries.json`, {
+        headers: {
+          Authorization: `Bearer ${keys.GITHUB_API_TOKEN}`,
+        },
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        // Data field contains the base64 encoded content of the file
+        const rawData = atob(data.content);
+        const parsedData = JSON.parse(rawData);
+        setT(parsedData);
+      } else {
+        console.error('Failed to fetch JSON data');
+      }
+    };
+
+    fetchT();
+    fetchR();
+  }, []);
+
+
+  useEffect(() => {
+    if (wmoId && R && T) {
+      setR_station(R);
+      setT_station(T);
+    }   
+  }, [wmoId, T, R]);
   
   useEffect(() => {
     if (R_station && T_station) {
@@ -63,8 +106,6 @@ const MeteostationPage: React.FC = () => {
 
 
 
-  console.log(T_vegetation);
-  console.log(T_station);
   const T_v = T_vegetation.reverse().splice(0, 10);
   const R_v = R_vegetation.reverse().splice(0, 10);
 

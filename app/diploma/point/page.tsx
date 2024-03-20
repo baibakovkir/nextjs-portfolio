@@ -6,6 +6,7 @@ import gsus from '@/constants/gsus';
 import meteostations from '@/constants/meteo';
 import { useSearchParams } from 'next/navigation'
 import LineChart from "../../components/Charts/LineChart";
+import keys from '../../../keys.js'
 
 const PointPage: React.FC = () => {
   const searchParams = useSearchParams()
@@ -98,7 +99,7 @@ const PointPage: React.FC = () => {
   useEffect(() => {
     let lat = selectedMeteo!.lat!.replace(',', '.')!;
     let lon = selectedMeteo!.lon!.replace(',', '.')!;
-    const API_key = "1b55acadcf8ef2f3ea4f6f89a6d08a90";
+    const API_key = keys.OPENWEATHER_API_KEY;
     console.log(OpenWeatherApiKey);
     fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_key}`)
     .then(response => {
