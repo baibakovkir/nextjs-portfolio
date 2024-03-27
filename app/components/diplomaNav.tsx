@@ -3,10 +3,9 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 
-export const Navigation: React.FC = () => {
+export const Navigation: React.FC<{ lat: string; lon: string}> = ({ lat, lon }) => {
 	const ref = useRef<HTMLElement>(null);
 	const [isIntersecting, setIntersecting] = useState(true);
-
 	useEffect(() => {
 		if (!ref.current) return;
 		const observer = new IntersectionObserver(([entry]) =>
@@ -28,7 +27,7 @@ export const Navigation: React.FC = () => {
 			>
 				<div className="container flex flex-row items-center justify-between p-6 mx-auto">
 					<Link
-						href="/diploma"
+						href={"/diploma?lat=" + lat + "&lon=" + lon}
 						className="duration-200 text-zinc-300 hover:text-zinc-100"
 					>
 						<ArrowLeft className="w-6 h-6 " />

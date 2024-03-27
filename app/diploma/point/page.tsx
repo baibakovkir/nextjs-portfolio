@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import { Navigation } from "../../components/nav";
+import { Navigation } from "../../components/diplomaNav";
 import { Card } from "../../components/card";
 import gsus from '@/constants/gsus';
 import meteostations from '@/constants/meteo';
@@ -11,6 +11,8 @@ import keys from '../../../keys.js'
 const PointPage: React.FC = () => {
   const searchParams = useSearchParams()
   const gsuId = searchParams?.get('id')
+  const lat  = searchParams?.get('lat');
+  const lon  = searchParams?.get('lon');
   const selectedGsu = gsus.find((gsu) => gsu.Id === parseInt(gsuId!))
   const OpenWeatherApiKey = process.env.OPENWEATHER_API_KEY;
 
@@ -137,8 +139,8 @@ const PointPage: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center w-screen min-h-screen justify-center mx-auto overflow-hidden bg-gradient-to-tl from-zinc-500 via-zinc-600/20 to-black pb-48">
-      <Navigation />
+    <div className="flex flex-col items-center w-screen min-h-screen justify-center mx-auto overflow-hidden bg-gradient-to-tl from-black-500 via-zinc-600/20 to-black pb-48">
+      <Navigation lat={lat!} lon={lon!} />
       <div className='h-24'></div>
       <h1 className='mt-4 color-text z-50 font-display text-3xl sm:text-5xl md:text-7xl bg-clip-text text-center text-white'>{selectedGsu?.Name} ГСУ</h1>
       <div className='h-3'></div>

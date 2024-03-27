@@ -29,6 +29,8 @@ const MeteostationPage: React.FC = () => {
   const searchParams = useSearchParams();
   const wmoId = searchParams?.get('id');
   const name  = searchParams?.get('name');
+  const lat  = searchParams?.get('lat');
+  const lon  = searchParams?.get('lon');
   const [R_station, setR_station] = useState([]);
   const [T_station, setT_station] = useState([]);
   const [R_years, setR_years] = useState<any>([]);
@@ -307,8 +309,8 @@ const MeteostationPage: React.FC = () => {
 
 
   return (
-    <div className="flex flex-col items-center w-screen min-h-screen justify-center mx-auto overflow-hidden bg-gradient-to-tl from-zinc-500 via-zinc-600/20 to-black pb-48">
-      <Navigation />
+    <div className="flex flex-col items-center w-screen min-h-screen justify-center mx-auto overflow-hidden bg-gradient-to-tl from-black-500 via-zinc-600/20 to-black pb-48">
+      <Navigation lat={lat!} lon={lon!} />
       <p className="text-3xl font-bold text-white mt-40">{name}</p>
       <div className='mt-10 m-auto w-10/12 mx-auto h-96'>
         <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display m-auto">

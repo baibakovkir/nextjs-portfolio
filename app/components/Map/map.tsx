@@ -7,18 +7,28 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import meteostations from '../../../constants/meteo.js'
 import gsus from '../../../constants/gsus.js'
-import { Icon } from "leaflet";
+import { Icon } from "leaflet";import Select from 'react-select';
+import { useSearchParams } from 'next/navigation'
 
 
 const Map = () => {
+  const searchParams = useSearchParams();
+  let initialLat = searchParams?.get('lat');
+  let initilaLon  = searchParams?.get('lon');
   const gsuInitial = gsus.find((gsu) => gsu.Id === 151);
   const [selectedPoint, setSelectedPoint] = useState(gsuInitial); // Set the default selected point
 
-  const handlePointChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedPointName = event.target.value;
+  const handlePointChange = (point: string) => {
+    const selectedPointName = point;
     const newSelectedPoint = gsus.find((point) => point.Name === selectedPointName);
     newSelectedPoint && setSelectedPoint(newSelectedPoint); // Update the selected point
   };
+
+  const options = gsus.map((point) => ({
+    value: point.Name,
+    label: point.Name,
+  }));
+  
 
   useEffect(() => {
     // Disable attribution
@@ -40,20 +50,30 @@ const Map = () => {
     popupAnchor: [1, -34],
   });
 
+  useEffect(() => {
+    if (initialLat && initilaLon) {
+      // Remove query parameters from the URL
+      const url = new URL(window.location.href);
+      url.search = '';
+      window.history.replaceState({}, document.title, url);
+      initialLat = null;
+      initilaLon = null;
+    }
+  }, [initialLat, initilaLon]);
   
   return (
     <div className={styles.mapContainer}>
-    <select style={{ top: '100px' }} className="absolute top-100-px right-5 z-20 appearance-none bg-white border border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:border-blue-500" value={selectedPoint!.Name!} onChange={handlePointChange}>
-      {gsus.map((point, index) => (
-        <option key={index} value={point.Name!}>
-          {point.Name}
-        </option>
-      ))}
-    </select>
+    <Select
+      className={styles.select}
+      classNamePrefix="select"
+      options={options}
+      value={{ value: selectedPoint!.Name, label: selectedPoint!.Name }}
+      onChange={(selectedOption) => handlePointChange(selectedOption!.value)}
+    />
       <MapContainer
         key={selectedPoint!.Name}
         className={styles.map}
-        center={[selectedPoint!.X!, selectedPoint!.Y!]} // Center the map on the selectedPoint.coordinates}
+        center={[initialLat ? parseFloat(initialLat) : selectedPoint!.X!, initilaLon ? parseFloat(initilaLon) : selectedPoint!.Y!]} // Center the map on the selectedPoint.coordinates}
         zoom={12}
         scrollWheelZoom={true}
         zoomControl={false}
@@ -83,7 +103,7 @@ const Map = () => {
           <Popup>
           <Link href={{
             pathname: '/diploma/meteostation',
-            query: 'id=' + point.wmo_id.toString() + '&name=' + point.Name + '&lat=' + point.lat + '&lon=' + point.lon,
+            query: 'id=' + point.wmo_id.toString() + '&name=' + point.Name + '&lat=' + point.lat.replace(',', '.') + '&lon=' + point.lon.replace(',', '.'),
           }}>
             {point.Name}
           </Link>
