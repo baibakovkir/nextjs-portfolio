@@ -70,7 +70,7 @@ const Map = () => {
               <Link
                 href={{
                   pathname: '/diploma/point',
-                  query: 'id=' + point.Id.toString(),
+                  query: 'id=' + point.Id.toString() + '&name=' + point.Name + '&lat=' + point.X + '&lon=' + point.Y,
                 }}
               >
                 {point.Name}
@@ -83,7 +83,7 @@ const Map = () => {
           <Popup>
           <Link href={{
             pathname: '/diploma/meteostation',
-            query: 'id=' + point.wmo_id.toString() + '&name=' + point.Name,
+            query: 'id=' + point.wmo_id.toString() + '&name=' + point.Name + '&lat=' + point.lat + '&lon=' + point.lon,
           }}>
             {point.Name}
           </Link>
