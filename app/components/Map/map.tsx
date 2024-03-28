@@ -14,9 +14,14 @@ import { useSearchParams } from 'next/navigation'
 const Map = () => {
   const searchParams = useSearchParams();
   let initialLat = searchParams?.get('lat');
-  let initilaLon  = searchParams?.get('lon');
+  let initialLon  = searchParams?.get('lon');
   const gsuInitial = gsus.find((gsu) => gsu.Id === 151);
-  const [selectedPoint, setSelectedPoint] = useState(gsuInitial); // Set the default selected point
+  const closestGSU = gsus.reduce((closest, current) => {
+    const closestDistance = Math.abs(closest.X - parseFloat(initialLat!)) + Math.abs(closest.Y - parseFloat(initialLon!));
+    const currentDistance = Math.abs(current.X - parseFloat(initialLat!)) + Math.abs(current.Y - parseFloat(initialLon!));
+    return currentDistance < closestDistance ? current : closest;
+  }, gsus[0]);
+  const [selectedPoint, setSelectedPoint] = useState(closestGSU ? closestGSU : gsuInitial); // Set the default selected point
 
   const handlePointChange = (point: string) => {
     const selectedPointName = point;
@@ -49,17 +54,6 @@ const Map = () => {
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
   });
-
-  useEffect(() => {
-    if (initialLat && initilaLon) {
-      // Remove query parameters from the URL
-      const url = new URL(window.location.href);
-      url.search = '';
-      window.history.replaceState({}, document.title, url);
-      initialLat = null;
-      initilaLon = null;
-    }
-  }, [initialLat, initilaLon]);
   
   return (
     <div className={styles.mapContainer}>
@@ -73,7 +67,7 @@ const Map = () => {
       <MapContainer
         key={selectedPoint!.Name}
         className={styles.map}
-        center={[initialLat ? parseFloat(initialLat) : selectedPoint!.X!, initilaLon ? parseFloat(initilaLon) : selectedPoint!.Y!]} // Center the map on the selectedPoint.coordinates}
+        center={[selectedPoint!.X!, selectedPoint!.Y!]} // Center the map on the selectedPoint.coordinates}
         zoom={12}
         scrollWheelZoom={true}
         zoomControl={false}
