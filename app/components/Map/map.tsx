@@ -7,11 +7,15 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import meteostations from '../../../constants/meteo.js'
 import gsus from '../../../constants/gsus.js'
-import { Icon } from "leaflet";import Select from 'react-select';
+import { Icon } from "leaflet";
+import Select from 'react-select';
 import { useSearchParams } from 'next/navigation'
+import keys from '../../../keys.js'
+
 
 
 const Map = () => {
+
   const searchParams = useSearchParams();
   let initialLat = searchParams?.get('lat');
   let initialLon  = searchParams?.get('lon');
@@ -22,6 +26,15 @@ const Map = () => {
     return currentDistance < closestDistance ? current : closest;
   }, gsus[0]);
   const [selectedPoint, setSelectedPoint] = useState(closestGSU ? closestGSU : gsuInitial); // Set the default selected point
+  const layers = [
+    {label: 'Спутник', value: 'sat' },
+    {label: 'Температура', value: 'temp'},
+    {label: 'Осадки', value: 'precipitation'},
+    {label: 'Облачность', value: 'clouds'},
+    {label: 'Давление', value: 'pressure'},
+    {label: 'Ветер', value: 'wind'},
+  ];
+  const [selectedLayer, setSelectedLayer] = useState(layers[0].value);
 
   const handlePointChange = (point: string) => {
     const selectedPointName = point;
@@ -33,7 +46,13 @@ const Map = () => {
     value: point.Name,
     label: point.Name,
   }));
+
+
+
   
+  const handleLayerChange = (layer: string) => {
+    setSelectedLayer(layer);
+  };
 
   useEffect(() => {
     // Disable attribution
@@ -58,11 +77,18 @@ const Map = () => {
   return (
     <div className={styles.mapContainer}>
     <Select
-      className={styles.select}
+      className={styles.select__gsu}
       classNamePrefix="select"
       options={options}
       value={{ value: selectedPoint!.Name, label: selectedPoint!.Name }}
       onChange={(selectedOption) => handlePointChange(selectedOption!.value)}
+    />
+    <Select
+      className={styles.select__map}
+      classNamePrefix="select"
+      options={layers}
+      value={{ value: selectedLayer, label: selectedLayer }}
+      onChange={(selectedOption) => handleLayerChange(selectedOption!.value)}
     />
       <MapContainer
         key={selectedPoint!.Name}
@@ -72,12 +98,30 @@ const Map = () => {
         scrollWheelZoom={true}
         zoomControl={false}
       >
-        <TileLayer
-          url='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
-        />
-        <TileLayer
-          url='https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png'
-        />
+        { selectedLayer === 'sat' ? 
+          ( <><TileLayer
+            url='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+          />
+
+          <TileLayer
+            url='https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png'
+          />
+          </>)
+          : 
+          (<>
+            <TileLayer
+             url='https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+           />
+           
+           <TileLayer
+             url={`https://tile.openweathermap.org/map/${selectedLayer}_new/{z}/{x}/{y}.png?appid=${keys.OPENWEATHER_API_KEY}`}
+           />
+
+           <TileLayer
+            url='https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png'
+          />
+         </>)}
+       
         {gsus.sort((a, b) => a.Name.localeCompare(b.Name)).map((point, index) => (
           <Marker key={index} position={[point.X!, point.Y!]} draggable={false} icon={customIcon}>
             <Popup>
