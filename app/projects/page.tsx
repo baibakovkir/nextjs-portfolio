@@ -29,7 +29,6 @@ export default async function ProjectsPage() {
         new Date(b.date ?? Number.POSITIVE_INFINITY).getTime() -
         new Date(a.date ?? Number.POSITIVE_INFINITY).getTime(),
     );
-
   return (
     <div className="relative pb-16">
       <Navigation />
@@ -43,7 +42,6 @@ export default async function ProjectsPage() {
           </p>
         </div>
         <div className="w-full h-px bg-zinc-800" />
-
         <div className="grid grid-cols-1 gap-8 mx-auto lg:grid-cols-2 ">
           <Card>
             <Link href={`/projects/${featured.slug}`}>

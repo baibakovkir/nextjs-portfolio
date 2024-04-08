@@ -15,7 +15,7 @@ import keys from '../../../keys.js'
 
 
 const Map = () => {
-
+  const OpenWeatherKey = keys.OPENWEATHER_API_KEY
   const searchParams = useSearchParams();
   let initialLat = searchParams?.get('lat');
   let initialLon  = searchParams?.get('lon');
@@ -26,15 +26,24 @@ const Map = () => {
     return currentDistance < closestDistance ? current : closest;
   }, gsus[0]);
   const [selectedPoint, setSelectedPoint] = useState(closestGSU ? closestGSU : gsuInitial); // Set the default selected point
-  const layers = [
-    {label: 'Спутник', value: 'sat' },
+  const layersCompare = [
+    {label: 'Спутник', value: 'Спутник' },
     {label: 'Температура', value: 'temp'},
     {label: 'Осадки', value: 'precipitation'},
     {label: 'Облачность', value: 'clouds'},
     {label: 'Давление', value: 'pressure'},
     {label: 'Ветер', value: 'wind'},
   ];
+  const layers = [
+    { label: 'Спутник', value: 'Спутник' },
+    { label: 'Температура', value: 'Температура' },
+    { label: 'Осадки', value: 'Осадки' },
+    { label: 'Облачность', value: 'Облачность' },
+    { label: 'Давление', value: 'Давление' },
+    { label: 'Ветер', value: 'Ветер' }
+];
   const [selectedLayer, setSelectedLayer] = useState(layers[0].value);
+  const [renderLayer, setRenderLayer] = useState('');
 
   const handlePointChange = (point: string) => {
     const selectedPointName = point;
@@ -52,6 +61,9 @@ const Map = () => {
   
   const handleLayerChange = (layer: string) => {
     setSelectedLayer(layer);
+    const foundLayer = layersCompare.find((l) => l.label === layer);
+    setRenderLayer(foundLayer!.value);
+    console.log(renderLayer);
   };
 
   useEffect(() => {
@@ -73,7 +85,7 @@ const Map = () => {
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
   });
-  
+
   return (
     <div className={styles.mapContainer}>
     <Select
@@ -98,7 +110,7 @@ const Map = () => {
         scrollWheelZoom={true}
         zoomControl={false}
       >
-        { selectedLayer === 'sat' ? 
+        { selectedLayer === 'Спутник' ? 
           ( <><TileLayer
             url='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
           />
@@ -114,7 +126,7 @@ const Map = () => {
            />
            
            <TileLayer
-             url={`https://tile.openweathermap.org/map/${selectedLayer}_new/{z}/{x}/{y}.png?appid=${keys.OPENWEATHER_API_KEY}`}
+             url={`https://tile.openweathermap.org/map/${renderLayer}_new/{z}/{x}/{y}.png?appid=${OpenWeatherKey}`}
            />
 
            <TileLayer

@@ -19,7 +19,7 @@
   position: absolute !important;
   top: 150px;
   right: 5px;
-  z-index: 2;
+  z-index: 1;
   width: 315px;
 }
 
