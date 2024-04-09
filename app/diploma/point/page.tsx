@@ -7,8 +7,10 @@ import meteostations from '@/constants/meteo';
 import { useSearchParams } from 'next/navigation'
 import LineChart from "../../components/Charts/LineChart";
 import { Redis } from '@upstash/redis';
+import Preloader from '@/app/components/Preloader/Preloader';
 
 const PointPage: React.FC = () => {
+  const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams()
   const gsuId = searchParams?.get('id')
   const lat  = searchParams?.get('lat');
@@ -127,7 +129,8 @@ const PointPage: React.FC = () => {
     })
     .catch(error => {
       console.error('There has been a problem with the fetch operation:', error);
-    });
+    })
+    .finally(() => setLoading(false));
   }
   },[selectedMeteo, OpenWeatherKey]);
   
@@ -152,71 +155,79 @@ const PointPage: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center w-screen min-h-screen justify-center mx-auto overflow-hidden bg-gradient-to-tl from-black-500 via-zinc-600/20 to-black pb-48">
-      <Navigation lat={lat!} lon={lon!} />
-      <div className='h-24'></div>
-      <h1 className='mt-4 color-text z-50 font-display text-3xl sm:text-5xl md:text-7xl bg-clip-text text-center text-white'>{selectedGsu?.Name} ГСУ</h1>
-      <div className='h-3'></div>
-      <div>
-        <div className='flex flex-col justify-center'>
-          <div className="md:grid md:grid-cols-2 md:gap-4 m-auto w-10/12 grid grid-cols-1 gap-4">
-            <Card>
-              <article className="relative w-full h-full p-4 md:p-8">
-                <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">{selectedGsu?.FullName}</h2>
-                <p className="md:mt-4 md:text-xl leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300 text-xs">
-                  {selectedGsu?.Address}
-                </p>
-              </article>
-            </Card>
-            <Card>
-              <article className="relative w-full h-full p-4 md:p-8">
-                <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Координаты</h2>
-                <p className="md:mt-4 md:text-xl leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300 text-xs">
-                  Latitude: {selectedGsu?.X}; Longitude: {selectedGsu?.Y}
-                </p>
-              </article>
-            </Card>
-            <Card>
-              <article className="relative w-full h-full p-4 md:p-8">
-                <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Филиал:</h2>
-                <p className="md:mt-4 md:text-xl leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300 text-xs">
-                  {selectedGsu?.Filial}
-                </p>
-              </article>
-            </Card>
-            <Card>
-              <article className="relative w-full h-full p-4 md:p-8">
-                <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Температура воздуха:</h2>
-                <p className="md:mt-4 md:text-xl leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300 text-xs">
-                  {(meteodata?.main.temp - 273.15).toFixed(1)}°C
-                </p>
-              </article>
-            </Card>
-            <Card>
-              <article className="relative w-full h-full p-4 md:p-8">
-                <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Процент облачности:</h2>
-                <p className="md:mt-4 md:text-xl leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300 text-xs">
-                   {meteodata.clouds.all}%
-                </p>
-              </article>
-            </Card>
-            <Card>
-              <article className="relative w-full h-full p-4 md:p-8">
-                <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Ветер</h2>
-                <p className="md:mt-4 md:text-xl leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300 text-xs">
-                  Направление: {direction}; Скорость: {meteodata.wind.speed}м/с
-                </p>
-              </article>
-            </Card>
+    <>
+      {loading ? 
+      (<Preloader />)
+      :
+      (
+        <div className="flex flex-col items-center w-screen min-h-screen justify-center mx-auto overflow-hidden bg-gradient-to-tl from-black-500 via-zinc-600/20 to-black pb-48">
+          <Navigation lat={lat!} lon={lon!} />
+            <div className='h-24'></div>
+            <h1 className='mt-4 color-text z-50 font-display text-3xl sm:text-5xl md:text-7xl bg-clip-text text-center text-white'>{selectedGsu?.Name} ГСУ</h1>
+            <div className='h-3'></div>
+            <div>
+              <div className='flex flex-col justify-center'>
+                <div className="md:grid md:grid-cols-2 md:gap-4 m-auto w-10/12 grid grid-cols-1 gap-4">
+                  <Card>
+                    <article className="relative w-full h-full p-4 md:p-8">
+                      <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">{selectedGsu?.FullName}</h2>
+                      <p className="md:mt-4 md:text-xl leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300 text-xs">
+                        {selectedGsu?.Address}
+                      </p>
+                    </article>
+                  </Card>
+                  <Card>
+                    <article className="relative w-full h-full p-4 md:p-8">
+                      <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Координаты</h2>
+                      <p className="md:mt-4 md:text-xl leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300 text-xs">
+                        Latitude: {selectedGsu?.X}; Longitude: {selectedGsu?.Y}
+                      </p>
+                    </article>
+                  </Card>
+                  <Card>
+                    <article className="relative w-full h-full p-4 md:p-8">
+                      <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Филиал:</h2>
+                      <p className="md:mt-4 md:text-xl leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300 text-xs">
+                        {selectedGsu?.Filial}
+                      </p>
+                    </article>
+                  </Card>
+                  <Card>
+                    <article className="relative w-full h-full p-4 md:p-8">
+                      <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Температура воздуха:</h2>
+                      <p className="md:mt-4 md:text-xl leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300 text-xs">
+                        {(meteodata?.main.temp - 273.15).toFixed(1)}°C
+                      </p>
+                    </article>
+                  </Card>
+                  <Card>
+                    <article className="relative w-full h-full p-4 md:p-8">
+                      <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Процент облачности:</h2>
+                      <p className="md:mt-4 md:text-xl leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300 text-xs">
+                        {meteodata.clouds.all}%
+                      </p>
+                    </article>
+                  </Card>
+                  <Card>
+                    <article className="relative w-full h-full p-4 md:p-8">
+                      <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Ветер</h2>
+                      <p className="md:mt-4 md:text-xl leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300 text-xs">
+                        Направление: {direction}; Скорость: {meteodata.wind.speed}м/с
+                      </p>
+                    </article>
+                  </Card>
+              </div>
+              <div className='m-auto w-10/12 mx-auto h-96'>
+                <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display m-auto">
+                  Прогноз белка и фактический белок</h2>
+                  { <LineChart chartData={proteinData} id='protein' /> }   
+              </div>
+              </div>
+            </div>
         </div>
-        <div className='m-auto w-10/12 mx-auto h-96'>
-          <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display m-auto">
-            Прогноз белка и фактический белок</h2>
-             { <LineChart chartData={proteinData} id='protein' /> }   
-        </div>
-        </div>
-      </div>
-    </div>
+      )
+      }
+    </>
   );
 }
 
