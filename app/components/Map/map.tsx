@@ -10,12 +10,23 @@ import gsus from '../../../constants/gsus.js'
 import { Icon } from "leaflet";
 import Select from 'react-select';
 import { useSearchParams } from 'next/navigation'
-import keys from '../../../keys.js'
+import { Redis } from '@upstash/redis';
 
 
 
 const Map = () => {
-  const OpenWeatherKey = keys.OPENWEATHER_API_KEY
+  const redis = new Redis({
+    url: "https://pretty-eft-30229.upstash.io",
+    token: "AXYVACQgMDQ1MDM0OGEtY2Y1ZC00YTQwLWI2YzEtYWM4MmVjYjhiMDZlZmNjZmIwNzUxZmY2NDQ4NWEyOTllZmJjZTQ3MGUzZjI=",
+  });
+  const fetchData = async () => {
+    const decryptedKey = await redis.get('Open_Weather_API');
+    return decryptedKey;
+  };
+  const [OpenWeatherKey, setOpenWeatherKey] = useState('');
+  useEffect(() => {
+    fetchData().then((key : any) => setOpenWeatherKey(key));
+  }, []);
   const searchParams = useSearchParams();
   let initialLat = searchParams?.get('lat');
   let initialLon  = searchParams?.get('lon');

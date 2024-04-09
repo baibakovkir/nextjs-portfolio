@@ -6,7 +6,7 @@ import gsus from '@/constants/gsus';
 import meteostations from '@/constants/meteo';
 import { useSearchParams } from 'next/navigation'
 import LineChart from "../../components/Charts/LineChart";
-import keys from '../../../keys.js'
+import { Redis } from '@upstash/redis';
 
 const PointPage: React.FC = () => {
   const searchParams = useSearchParams()
@@ -26,7 +26,7 @@ const PointPage: React.FC = () => {
       },
       {
         label: 'Фактический белок',
-        data: [null, 9.2, 11.7, null, 10.9, null, 11.6, 13.5, 12.3, 10.6, 13.3, 15.1, 12.6, null, 12.3, 12.7, null, 13.1, 13.3, 11.2, 15, 12.1, 12.5, 14.1, null, null, 12, 12.8],
+        data: [undefined, 9.2, 11.7, undefined, 10.9, undefined, 11.6, 13.5, 12.3, 10.6, 13.3, 15.1, 12.6, 14.0, 12.3, 12.7, undefined, 13.1, 13.3, 11.2, 15, 12.1, 12.5, 14.1, 11.8, 12.4, 14.4, 12.6, undefined, undefined, 12, 12.8],
       },
     ],
   };
@@ -98,12 +98,24 @@ const PointPage: React.FC = () => {
     });
   },[selectedMeteo])
 
+  const redis = new Redis({
+    url: "https://pretty-eft-30229.upstash.io",
+    token: "AXYVACQgMDQ1MDM0OGEtY2Y1ZC00YTQwLWI2YzEtYWM4MmVjYjhiMDZlZmNjZmIwNzUxZmY2NDQ4NWEyOTllZmJjZTQ3MGUzZjI=",
+  });
+  const fetchData = async () => {
+    const decryptedKey = await redis.get('Open_Weather_API');
+    return decryptedKey;
+  };
+  const [OpenWeatherKey, setOpenWeatherKey] = useState('');
   useEffect(() => {
+    fetchData().then((key : any) => setOpenWeatherKey(key));
+  }, []);
+
+  useEffect(() => {
+    if(OpenWeatherKey){
     let lat = selectedMeteo!.lat!.replace(',', '.')!;
     let lon = selectedMeteo!.lon!.replace(',', '.')!;
-    const API_key = keys.OPENWEATHER_API_KEY;
-    console.log(OpenWeatherApiKey);
-    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_key}`)
+    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OpenWeatherKey}`)
     .then(response => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -116,7 +128,8 @@ const PointPage: React.FC = () => {
     .catch(error => {
       console.error('There has been a problem with the fetch operation:', error);
     });
-  },[selectedMeteo])
+  }
+  },[selectedMeteo, OpenWeatherKey]);
   
   const degrees = meteodata.wind.deg;
   let direction = '';

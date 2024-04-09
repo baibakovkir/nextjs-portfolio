@@ -1,5 +1,5 @@
 {
-  "name": "kiryxa09.com",
+  "name": "baibakovkir.com",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -14,9 +14,10 @@
     "@next/mdx": "^13.5.4",
     "@react-leaflet/core": "^2.1.0",
     "@types/chart.js": "^2.9.41",
-    "@upstash/redis": "^1.23.3",
+    "@upstash/redis": "^1.29.0",
     "chart.js": "^4.4.2",
     "contentlayer": "^0.3.4",
+    "crypto": "^1.0.1",
     "framer-motion": "^10.16.4",
     "leaflet": "^1.9.4",
     "leaflet-defaulticon-compatibility": "^0.1.2",

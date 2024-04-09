@@ -19,9 +19,9 @@ const socials = [
 	},
 	{
 		icon: <Github size={20} />,
-		href: "https://github.com/kiryxa09",
+		href: "https://github.com/baibakovkir",
 		label: "Github",
-		handle: "kiryxa09",
+		handle: "baibakovkir",
 	},
 ];
 

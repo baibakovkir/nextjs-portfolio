@@ -4,7 +4,9 @@ import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import LineChart from "../../components/Charts/LineChart";
 import { Navigation } from "../../components/diplomaNav";
-import keys from '../../../keys.js'
+import { Redis } from '@upstash/redis';
+import Preloader from '@/app/components/Preloader/Preloader';
+
 
 const findClosestStationId = (wmoId: any, tempData: any) => {
   let closestStationId: any = null;
@@ -26,6 +28,7 @@ const findClosestStationId = (wmoId: any, tempData: any) => {
 };
 
 const MeteostationPage: React.FC = () => {
+  const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
   const wmoId = searchParams?.get('id');
   const name  = searchParams?.get('name');
@@ -55,31 +58,46 @@ const MeteostationPage: React.FC = () => {
   const [R, setR] = useState<any>(null);
   const [stations, setStations] = useState<any>([]);
   const [closestStation, setClosestStation] = useState<any>(null);
+  const redis = new Redis({
+      url: "https://pretty-eft-30229.upstash.io",
+      token: "AXYVACQgMDQ1MDM0OGEtY2Y1ZC00YTQwLWI2YzEtYWM4MmVjYjhiMDZlZmNjZmIwNzUxZmY2NDQ4NWEyOTllZmJjZTQ3MGUzZjI=",
+    });
+  const fetchData = async () => {
+    const decryptedKey = await redis.get('Github_API');
+    return decryptedKey;
+  };
+  const [decryptedKey, setDecryptedKey] = useState('');
+  useEffect(() => {
+    fetchData().then((key : any) => setDecryptedKey(key));
+  }, []);
+
+
 
   useEffect(() => {
-    const fetchStations= async () => {
-      const response = await fetch(`https://api.github.com/repos/kiryxa09/jsons/contents/T_by_wmo_id`, {
-        headers: {
-          Authorization: `Bearer ${keys.GITHUB_API_TOKEN}`,
-        },
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        // Data field contains the base64 encoded content of the file
-        //console.log(data);
-        const parsedData: any = [];
-        data.forEach((item: any) => {
-          parsedData.push(item.name);
-        })
-        setStations(parsedData);
-      } else {
-        console.error('Failed to fetch JSON data');
-      }
-    }
-    fetchStations();
+    if(decryptedKey){
+      const fetchStations= async () => {
+        const response = await fetch(`https://api.github.com/repos/baibakovkir/jsons/contents/T_by_wmo_id`, {
+          headers: {
+            Authorization: `Bearer ${decryptedKey}`,
+          },
+        });
     
-  }, [])
+        if (response.ok) {
+          const data = await response.json();
+          // Data field contains the base64 encoded content of the file
+          //console.log(data);
+          const parsedData: any = [];
+          data.forEach((item: any) => {
+            parsedData.push(item.name);
+          })
+          setStations(parsedData);
+        } else {
+          console.error('Failed to fetch JSON data');
+        }
+      }
+      fetchStations();
+    }
+  }, [decryptedKey]);
 
   useEffect(() => {
     if (stations){
@@ -90,9 +108,9 @@ const MeteostationPage: React.FC = () => {
   useEffect(() => {
     if(closestStation){
       const fetchR = async () => {
-        const response = await fetch(`https://api.github.com/repos/kiryxa09/jsons/contents/R_by_wmo_id/${closestStation}/entries.json`, {
+        const response = await fetch(`https://api.github.com/repos/baibakovkir/jsons/contents/R_by_wmo_id/${closestStation}/entries.json`, {
           headers: {
-            Authorization: `Bearer ${keys.GITHUB_API_TOKEN}`,
+            Authorization: `Bearer ${decryptedKey}`,
           },
         });
         
@@ -108,9 +126,9 @@ const MeteostationPage: React.FC = () => {
       };
   
       const fetchOb = async () => {
-        const response = await fetch(`https://api.github.com/repos/kiryxa09/jsons/contents/Ob_by_wmo_id/${closestStation}/entries.json`, {
+        const response = await fetch(`https://api.github.com/repos/baibakovkir/jsons/contents/Ob_by_wmo_id/${closestStation}/entries.json`, {
           headers: {
-            Authorization: `Bearer ${keys.GITHUB_API_TOKEN}`,
+            Authorization: `Bearer ${decryptedKey}`,
           },
         });
         
@@ -126,9 +144,9 @@ const MeteostationPage: React.FC = () => {
       };
 
       const fetchE = async () => {
-        const response = await fetch(`https://api.github.com/repos/kiryxa09/jsons/contents/E_by_wmo_id/${closestStation}/entries.json`, {
+        const response = await fetch(`https://api.github.com/repos/baibakovkir/jsons/contents/E_by_wmo_id/${closestStation}/entries.json`, {
           headers: {
-            Authorization: `Bearer ${keys.GITHUB_API_TOKEN}`,
+            Authorization: `Bearer ${decryptedKey}`,
           },
         });
         
@@ -144,9 +162,9 @@ const MeteostationPage: React.FC = () => {
       };
 
       const fetchPss = async () => {
-        const response = await fetch(`https://api.github.com/repos/kiryxa09/jsons/contents/Pss_by_wmo_id/${closestStation}/entries.json`, {
+        const response = await fetch(`https://api.github.com/repos/baibakovkir/jsons/contents/Pss_by_wmo_id/${closestStation}/entries.json`, {
           headers: {
-            Authorization: `Bearer ${keys.GITHUB_API_TOKEN}`,
+            Authorization: `Bearer ${decryptedKey}`,
           },
         });
         
@@ -162,9 +180,9 @@ const MeteostationPage: React.FC = () => {
       };
 
       const fetchT = async () => {
-        const response = await fetch(`https://api.github.com/repos/kiryxa09/jsons/contents/T_by_wmo_id/${closestStation}/entries.json`, {
+        const response = await fetch(`https://api.github.com/repos/baibakovkir/jsons/contents/T_by_wmo_id/${closestStation}/entries.json`, {
           headers: {
-            Authorization: `Bearer ${keys.GITHUB_API_TOKEN}`,
+            Authorization: `Bearer ${decryptedKey}`,
           },
         });
         
@@ -228,6 +246,7 @@ const MeteostationPage: React.FC = () => {
         }
       }
       setHTC(newHTC);
+      setLoading(false);
     }
   }, [T_vegetation, R_vegetation]);
 
@@ -309,7 +328,10 @@ const MeteostationPage: React.FC = () => {
 
 
   return (
-    <div className="flex flex-col items-center w-screen min-h-screen justify-center mx-auto overflow-hidden bg-gradient-to-tl from-black-500 via-zinc-600/20 to-black pb-48">
+    <>
+      {loading ? 
+      <Preloader /> : 
+      <div className="flex flex-col items-center w-screen min-h-screen justify-center mx-auto overflow-hidden bg-gradient-to-tl from-black-500 via-zinc-600/20 to-black pb-48">
       <Navigation lat={lat!} lon={lon!} />
       <p className="text-3xl font-bold text-white mt-40">{name}</p>
       <div className='mt-10 m-auto w-10/12 mx-auto h-96'>
@@ -354,7 +376,9 @@ const MeteostationPage: React.FC = () => {
         </h2>
           { <LineChart chartData={Ob_data} id='Ob'  /> }   
       </div>
-    </div>
+      </div>
+      }
+    </>
   );
 }
 
