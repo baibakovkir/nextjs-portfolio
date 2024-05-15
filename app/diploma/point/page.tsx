@@ -8,6 +8,7 @@ import { useSearchParams } from 'next/navigation'
 import LineChart from "../../components/Charts/LineChart";
 import { Redis } from '@upstash/redis';
 import Preloader from '@/app/components/Preloader/Preloader';
+import * as protein from '@/constants/protein';
 
 const PointPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -16,7 +17,40 @@ const PointPage: React.FC = () => {
   const lat  = searchParams?.get('lat');
   const lon  = searchParams?.get('lon');
   const selectedGsu = gsus.find((gsu) => gsu.Id === parseInt(gsuId!))
-  const OpenWeatherApiKey = process.env.OPENWEATHER_API_KEY;
+  let fact = [];
+  let forecast = [];
+  const regionId = selectedGsu?.RegionId ?? -1;
+  const factData = {
+    1: protein.fact1,
+    2: protein.fact2,
+    3: protein.fact3,
+    4: protein.fact4,
+    5: protein.fact5,
+    6: protein.fact6,
+    7: protein.fact7,
+    8: protein.fact8,
+    9: protein.fact9,
+    10: protein.fact10,
+    11: protein.fact11,
+    12: protein.fact12
+  }[regionId];
+  const forecastData = {
+    1: protein.forecast1,
+    2: protein.forecast2,
+    3: protein.forecast3,
+    4: protein.forecast4,
+    5: protein.forecast5,
+    6: protein.forecast6,
+    7: protein.forecast7,
+    8: protein.forecast8,
+    9: protein.forecast9,
+    10: protein.forecast10,
+    11: protein.forecast11,
+    12: protein.forecast12
+  }[regionId];
+
+  fact = factData ?? [];
+  forecast = forecastData ?? [];
 
   const selectedMeteo = meteostations.find((meteostation) => meteostation.wmo_id === selectedGsu!.wmo_id)
   const proteinData = {
@@ -24,11 +58,11 @@ const PointPage: React.FC = () => {
     datasets: [
       {
         label: 'Прогноз белка',
-        data: [11.2, 10.5, 13.3, 12.5, 10.5, 10.4, 12, 13.5, 12.8, 11.9, 13.8, 12.4, 13, 8.5, 12, 11.6, 12.9, 12.5, 13, 12, 13.9, 12.8, 13.9, 12.9, 11.8, 12, 13.4, 12.7, 14.2, 12.9, 12.5, 12.2],
+        data: forecast,
       },
       {
         label: 'Фактический белок',
-        data: [undefined, 9.2, 11.7, undefined, 10.9, undefined, 11.6, 13.5, 12.3, 10.6, 13.3, 15.1, 12.6, 14.0, 12.3, 12.7, undefined, 13.1, 13.3, 11.2, 15, 12.1, 12.5, 14.1, 11.8, 12.4, 14.4, 12.6, undefined, undefined, 12, 12.8],
+        data: fact,
       },
     ],
   };
@@ -82,23 +116,6 @@ const PointPage: React.FC = () => {
     "cod": 200
 });
 
-  useEffect(() => {
-    let lat = selectedMeteo!.lat!.replace(',', '.')!;
-    let lon = selectedMeteo!.lon!.replace(',', '.')!;
-    fetch(`https://api.ambeedata.com/latest/by-lat-lng?lat=${lat}&lng=${lon}`)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log(data);
-    })
-    .catch(error => {
-      console.error('There has been a problem with the fetch operation:', error);
-    });
-  },[selectedMeteo])
 
   const redis = new Redis({
     url: "https://pretty-eft-30229.upstash.io",
@@ -217,11 +234,13 @@ const PointPage: React.FC = () => {
                     </article>
                   </Card>
               </div>
+              { regionId === 1 || regionId === 9 || regionId === 10 || regionId === 11 || regionId === 12 ? <></> : 
               <div className='m-auto w-10/12 mx-auto h-96'>
                 <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display m-auto">
                   Прогноз белка и фактический белок</h2>
                   { <LineChart chartData={proteinData} id='protein' /> }   
               </div>
+              }
               </div>
             </div>
         </div>

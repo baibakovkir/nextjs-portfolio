@@ -326,7 +326,6 @@ const MeteostationPage: React.FC = () => {
   };
 
 
-
   return (
     <>
       {loading ? 
