@@ -176,6 +176,7 @@ const MeteostationPage: React.FC = () => {
           setPss(parsedData);
         } else {
           console.error('Failed to fetch JSON data');
+          setPss_status(false);
         }
       };
 
@@ -235,7 +236,7 @@ const MeteostationPage: React.FC = () => {
       setE_v(E.map((station: any) =>  station.monthly_data.May + station.monthly_data.June + station.monthly_data.July));
       setPss_v(Pss.map((station: any) => station.monthly_data.May + station.monthly_data.June + station.monthly_data.July));
     }
-  }, [R_station, T_station]);
+  }, [R_station, T_station, E, Ob, Pss]);
 
   
   useEffect(() => {
