@@ -197,11 +197,16 @@ const MeteostationPage: React.FC = () => {
         }
       };
       
-      fetchE();
-      fetchOb();
-      fetchPss();
-      fetchT();
-      fetchR();
+      const fetchAll = async () => {
+        await Promise.all([
+          fetchE(), 
+          fetchOb(), 
+          fetchPss(), 
+          fetchT(), 
+          fetchR(),
+        ]);
+      };
+      fetchAll();
     }
   }, [closestStation]);
 
@@ -214,7 +219,7 @@ const MeteostationPage: React.FC = () => {
   }, [wmoId, T, R]);
   
   useEffect(() => {
-    if (R_station.length && T_station.length) {
+    if (R_station.length && T_station.length && E.length && Ob.length) {
       setR_years(R_station.map((station: any) => station.year));
       setT_years(T_station.map((station: any) => station.year));
       setE_years(E.map((station: any) => station.year));
@@ -249,6 +254,7 @@ const MeteostationPage: React.FC = () => {
       setLoading(false);
     }
   }, [T_vegetation, R_vegetation]);
+
 
   const HTC_data = React.useMemo(() => ({
     labels: ['1992', '1993', '1994', '1995', '1996', '1997', '1998', '1999', '2000', '2001', '2002', '2003', '2004', '2005', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023'],
