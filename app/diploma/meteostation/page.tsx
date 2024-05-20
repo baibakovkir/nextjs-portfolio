@@ -176,7 +176,6 @@ const MeteostationPage: React.FC = () => {
           setPss(parsedData);
         } else {
           console.error('Failed to fetch JSON data');
-          setPss_status(false);
         }
       };
 
