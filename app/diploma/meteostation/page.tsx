@@ -6,6 +6,9 @@ import LineChart from "../../components/Charts/LineChart";
 import { Navigation } from "../../components/diplomaNav";
 import { Redis } from '@upstash/redis';
 import Preloader from '@/app/components/Preloader/Preloader';
+import { NextResponse } from 'next/server';
+import { getAll } from '@vercel/edge-config';
+
 
 
 const findClosestStationId = (wmoId: any, tempData: any) => {
@@ -58,16 +61,26 @@ const MeteostationPage: React.FC = () => {
   const [R, setR] = useState<any>(null);
   const [stations, setStations] = useState<any>([]);
   const [closestStation, setClosestStation] = useState<any>(null);
+  const [configItems, setConfigItems] = useState<any>([]);
+
+
+
+
+
+  
   const redis = new Redis({
       url: "https://pretty-eft-30229.upstash.io",
       token: "AXYVACQgMDQ1MDM0OGEtY2Y1ZC00YTQwLWI2YzEtYWM4MmVjYjhiMDZlZmNjZmIwNzUxZmY2NDQ4NWEyOTllZmJjZTQ3MGUzZjI=",
     });
+
+
   const fetchData = async () => {
     const decryptedKey = await redis.get('Github_API');
     return decryptedKey;
   };
   const [decryptedKey, setDecryptedKey] = useState('');
   useEffect(() => {
+
     fetchData().then((key : any) => setDecryptedKey(key));
   }, []);
 

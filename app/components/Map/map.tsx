@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import meteostations from '../../../constants/meteo.js'
 import gsus from '../../../constants/gsus.js'
+import virs from '../../../constants/virs.js'
 import { Icon } from "leaflet";
 import Select from 'react-select';
 import { useSearchParams } from 'next/navigation'
@@ -97,6 +98,13 @@ const Map = () => {
     popupAnchor: [1, -34],
   });
 
+  const virIcon = new Icon({
+    iconUrl: "https://www.svgrepo.com/show/313259/biochemistry.svg",
+    iconSize: [30, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+  });
+
   return (
     <div className={styles.mapContainer}>
     <Select
@@ -168,6 +176,13 @@ const Map = () => {
           }}>
             {point.Name}
           </Link>
+          </Popup>
+        </Marker>)
+        ))}
+        {virs.map((point, index) => (
+          (<Marker key={index} position={[parseFloat(point.lat!), parseFloat(point.lon!)]} draggable={false} icon={virIcon}>
+          <Popup>
+            {point.name}
           </Popup>
         </Marker>)
         ))}
