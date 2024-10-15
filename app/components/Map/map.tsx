@@ -12,6 +12,7 @@ import { Icon } from "leaflet";
 import Select from 'react-select';
 import { useSearchParams } from 'next/navigation'
 import { Redis } from '@upstash/redis';
+import { WheatIcon } from "lucide-react";
 
 
 
@@ -69,6 +70,9 @@ const Map = () => {
   }));
 
 
+  const [meteostationsStatus, setMeteostationsStatus] = useState(true);
+  const [gsusStatus, setGsusStatus] = useState(true);
+  const [virsStatus, setVirsStatus] = useState(true);
 
   
   const handleLayerChange = (layer: string) => {
@@ -121,6 +125,17 @@ const Map = () => {
       value={{ value: selectedLayer, label: selectedLayer }}
       onChange={(selectedOption) => handleLayerChange(selectedOption!.value)}
     />
+    <div className='absolute z-10 top-52 right-10'>
+      <input className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+      type='checkbox' checked={meteostationsStatus} onChange={() => setMeteostationsStatus(!meteostationsStatus)} name="meteostations" />
+      <label className="ml-2 mr-2 text-sm font-medium text-gray-300" htmlFor="meteostations">Метеостанции</label>
+      <input className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+      type='checkbox' checked={gsusStatus} onChange={() => setGsusStatus(!gsusStatus)} name="gsus"/>
+      <label className="ml-2 mr-2 text-sm font-medium text-gray-300" htmlFor="gsus">ГСУ</label>
+      <input className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+      type='checkbox' checked={virsStatus} onChange={() => setVirsStatus(!virsStatus)} name="virs"/>
+      <label className="ml-2 mr-2 text-sm font-medium text-gray-300" htmlFor="virs">ВИР</label>
+    </div>
       <MapContainer
         key={selectedPoint!.Name}
         className={styles.map}
@@ -153,7 +168,7 @@ const Map = () => {
           />
          </>)}
        
-        {gsus.sort((a, b) => a.Name.localeCompare(b.Name)).map((point, index) => (
+        {gsusStatus && gsus.sort((a, b) => a.Name.localeCompare(b.Name)).map((point, index) => (
           <Marker key={index} position={[point.X!, point.Y!]} draggable={false} icon={customIcon}>
             <Popup>
               <Link
@@ -167,7 +182,7 @@ const Map = () => {
             </Popup>
           </Marker>
         ))}
-        {meteostations.map((point, index) => (
+        {meteostationsStatus && meteostations.map((point, index) => (
           (<Marker key={index} position={[parseFloat(point.lat!.replace(',', '.')!), parseFloat(point.lon!.replace(',', '.')!)]} draggable={false} icon={meteostationIcon}>
           <Popup>
           <Link href={{
@@ -179,7 +194,7 @@ const Map = () => {
           </Popup>
         </Marker>)
         ))}
-        {virs.map((point, index) => (
+        {virsStatus && virs.map((point, index) => (
           (<Marker key={index} position={[parseFloat(point.lat!), parseFloat(point.lon!)]} draggable={false} icon={virIcon}>
           <Popup>
             {point.name}

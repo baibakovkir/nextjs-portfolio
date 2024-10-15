@@ -6,9 +6,6 @@ import LineChart from "../../components/Charts/LineChart";
 import { Navigation } from "../../components/diplomaNav";
 import { Redis } from '@upstash/redis';
 import Preloader from '@/app/components/Preloader/Preloader';
-import { NextResponse } from 'next/server';
-import { getAll } from '@vercel/edge-config';
-
 
 
 const findClosestStationId = (wmoId: any, tempData: any) => {
@@ -61,7 +58,6 @@ const MeteostationPage: React.FC = () => {
   const [R, setR] = useState<any>(null);
   const [stations, setStations] = useState<any>([]);
   const [closestStation, setClosestStation] = useState<any>(null);
-  const [configItems, setConfigItems] = useState<any>([]);
 
 
 
