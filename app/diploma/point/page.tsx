@@ -180,14 +180,14 @@ const PointPage: React.FC = () => {
         <div className="flex flex-col items-center w-screen min-h-screen justify-center mx-auto overflow-hidden bg-gradient-to-tl from-black-500 via-zinc-600/20 to-black pb-48">
           <Navigation lat={lat!} lon={lon!} />
             <div className='h-24'></div>
-            <h1 className='mt-4 color-text z-50 font-display text-3xl sm:text-5xl md:text-7xl bg-clip-text text-center text-white'>{selectedGsu?.Name} ГСУ</h1>
+            <h1 className='mt-4 color-text z-50 font-display text-3xl sm:text-5xl md:text-7xl bg-clip-text text-center text-white'>{selectedGsu?.name} ГСУ</h1>
             <div className='h-3'></div>
             <div>
               <div className='flex flex-col justify-center'>
                 <div className="md:grid md:grid-cols-2 md:gap-4 m-auto w-10/12 grid grid-cols-1 gap-4">
                   <Card>
                     <article className="relative w-full h-full p-4 md:p-8">
-                      <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">{selectedGsu?.FullName}</h2>
+                      <h2 className="md:mt-4 md:text-xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">{selectedGsu?.FullName}</h2>
                       <p className="md:mt-4 md:text-xl leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300 text-xs">
                         {selectedGsu?.Address}
                       </p>
@@ -195,15 +195,15 @@ const PointPage: React.FC = () => {
                   </Card>
                   <Card>
                     <article className="relative w-full h-full p-4 md:p-8">
-                      <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Координаты</h2>
+                      <h2 className="md:mt-4 md:text-xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Координаты</h2>
                       <p className="md:mt-4 md:text-xl leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300 text-xs">
-                        Latitude: {selectedGsu?.X}; Longitude: {selectedGsu?.Y}
+                        Latitude: {selectedGsu?.lat}; Longitude: {selectedGsu?.lon}
                       </p>
                     </article>
                   </Card>
                   <Card>
                     <article className="relative w-full h-full p-4 md:p-8">
-                      <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Филиал:</h2>
+                      <h2 className="md:mt-4 md:text-xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Филиал:</h2>
                       <p className="md:mt-4 md:text-xl leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300 text-xs">
                         {selectedGsu?.Filial}
                       </p>
@@ -211,7 +211,7 @@ const PointPage: React.FC = () => {
                   </Card>
                   <Card>
                     <article className="relative w-full h-full p-4 md:p-8">
-                      <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Температура воздуха:</h2>
+                      <h2 className="md:mt-4 md:text-xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Температура воздуха:</h2>
                       <p className="md:mt-4 md:text-xl leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300 text-xs">
                         {(meteodata?.main.temp - 273.15).toFixed(1)}°C
                       </p>
@@ -219,7 +219,7 @@ const PointPage: React.FC = () => {
                   </Card>
                   <Card>
                     <article className="relative w-full h-full p-4 md:p-8">
-                      <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Процент облачности:</h2>
+                      <h2 className="md:mt-4 md:text-xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Процент облачности:</h2>
                       <p className="md:mt-4 md:text-xl leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300 text-xs">
                         {meteodata.clouds.all}%
                       </p>
@@ -227,7 +227,7 @@ const PointPage: React.FC = () => {
                   </Card>
                   <Card>
                     <article className="relative w-full h-full p-4 md:p-8">
-                      <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Ветер</h2>
+                      <h2 className="md:mt-4 md:text-xl font-bold text-zinc-100 group-hover:text-white text-xl font-display">Ветер</h2>
                       <p className="md:mt-4 md:text-xl leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300 text-xs">
                         Направление: {direction}; Скорость: {meteodata.wind.speed}м/с
                       </p>
@@ -236,7 +236,7 @@ const PointPage: React.FC = () => {
               </div>
               { regionId === 1 || regionId === 9 || regionId === 10 || regionId === 11 || regionId === 12 ? <></> : 
               <div className='m-auto w-10/12 mx-auto h-96'>
-                <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display m-auto">
+                <h2 className="md:mt-4 md:text-xl font-bold text-zinc-100 group-hover:text-white text-xl font-display m-auto">
                   Прогноз белка и фактический белок</h2>
                   { <LineChart chartData={proteinData} id='protein' /> }   
               </div>

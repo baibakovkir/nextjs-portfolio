@@ -349,43 +349,43 @@ const MeteostationPage: React.FC = () => {
       <Navigation lat={lat!} lon={lon!} />
       <p className="text-3xl font-bold text-white mt-40">{name}</p>
       <div className='mt-10 m-auto w-10/12 mx-auto h-96'>
-        <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display m-auto">
+        <h2 className="md:mt-4 md:text-xl font-bold text-zinc-100 group-hover:text-white text-xl font-display m-auto">
           График температур
         </h2>
           { <LineChart chartData={T_data} id='T'  /> }   
       </div>
       <div className='mt-10 m-auto w-10/12 mx-auto h-96'>
-        <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display m-auto">
+        <h2 className="md:mt-4 md:text-xl font-bold text-zinc-100 group-hover:text-white text-xl font-display m-auto">
           Осадки за период вегетации
         </h2>
           { <LineChart chartData={R_v_data} id='R'  /> }   
       </div>
       <div className='mt-10 m-auto w-10/12 mx-auto h-96'>
-        <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display m-auto">
+        <h2 className="md:mt-4 md:text-xl font-bold text-zinc-100 group-hover:text-white text-xl font-display m-auto">
           Температура за период вегетации
         </h2>
           { <LineChart chartData={T_v_data} id='T_v'  /> }   
       </div>
       <div className='mt-10 m-auto w-10/12 mx-auto h-96'>
-        <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display m-auto">
+        <h2 className="md:mt-4 md:text-xl font-bold text-zinc-100 group-hover:text-white text-xl font-display m-auto">
           ГТК
         </h2>
           { <LineChart chartData={HTC_data} id='HTC'  /> }   
       </div>
       <div className='mt-10 m-auto w-10/12 mx-auto h-96'>
-        <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display m-auto">
+        <h2 className="md:mt-4 md:text-xl font-bold text-zinc-100 group-hover:text-white text-xl font-display m-auto">
           Продожительность солнечного сияния
         </h2>
           { <LineChart chartData={Pss_data} id='Pss'  /> }   
       </div>
       <div className='mt-10 m-auto w-10/12 mx-auto h-96'>
-        <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display m-auto">
+        <h2 className="md:mt-4 md:text-xl font-bold text-zinc-100 group-hover:text-white text-xl font-display m-auto">
           Упругость водяного пара
         </h2>
           { <LineChart chartData={E_data} id='E'  /> }   
       </div>
       <div className='mt-10 m-auto w-10/12 mx-auto h-96'>
-        <h2 className="md:mt-4 md:text-xl md:text-3xl font-bold text-zinc-100 group-hover:text-white text-xl font-display m-auto">
+        <h2 className="md:mt-4 md:text-xl font-bold text-zinc-100 group-hover:text-white text-xl font-display m-auto">
           Облачность в баллах
         </h2>
           { <LineChart chartData={Ob_data} id='Ob'  /> }   
