@@ -13,6 +13,8 @@ import { Icon } from "leaflet";
 import Select from 'react-select';
 import { useSearchParams } from 'next/navigation'
 import { Redis } from '@upstash/redis';
+import wheatSvg from '../../../public/assets/wheat.svg';
+import thermometerSvg from '../../../public/assets/thermometer.svg';
 
 
 
@@ -90,18 +92,17 @@ const Map = () => {
     attributionElement.style.display = 'none';
   }, [selectedPoint]);
 
-  const customIcon = new Icon({
-    iconUrl: "https://www.svgrepo.com/show/225946/fields-farm.svg",
-    iconSize: [30, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
+  const gsuIcon = new Icon({
+    iconUrl: 'https://www.svgrepo.com/show/212060/wheat-barley.svg',
+    popupAnchor:  [-0, -0],
+    iconSize: [32,45], 
   });
 
   const meteostationIcon = new Icon({
-    iconUrl: "https://www.svgrepo.com/show/256392/thermometer-temperature.svg",
-    iconSize: [30, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
+    iconUrl: 'https://www.svgrepo.com/show/284533/thermometer-temperature.svg',
+    iconRetinaUrl: thermometerSvg,
+    popupAnchor:  [-0, -0],
+    iconSize: [32,45],
   });
 
   const virIcon = new Icon({
@@ -112,7 +113,7 @@ const Map = () => {
   });
 
   const podvedIcon = new Icon({
-    iconUrl: "https://www.svgrepo.com/show/499836/briefcase.svg",
+    iconUrl: 'https://www.svgrepo.com/show/212060/wheat-barley.svg',
     iconSize: [30, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
@@ -183,7 +184,7 @@ const Map = () => {
          </>)}
        
         {gsusStatus && gsus.sort((a, b) => a.name.localeCompare(b.name)).map((point, index) => (
-          <Marker key={index} position={[point.lat!, point.lon!]} draggable={false} icon={customIcon}>
+          <Marker key={index} position={[point.lat!, point.lon!]} draggable={false} icon={gsuIcon}>
             <Popup>
               <Link
                 href={{
