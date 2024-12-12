@@ -113,7 +113,7 @@ const Map = () => {
   });
 
   const podvedIcon = new Icon({
-    iconUrl: 'https://www.svgrepo.com/show/212060/wheat-barley.svg',
+    iconUrl: 'https://www.svgrepo.com/show/499836/briefcase.svg',
     iconSize: [30, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
